@@ -32,7 +32,9 @@ for w in np.arange(0.0,4.1,0.1):
 print(w_list)
 print(loss_list)
 #show the result by matplotlib
-plt.plot(w_list,loss_list)
+plt.plot(w_list,loss_list,color='red')
 plt.ylabel('loss')
 plt.xlabel('w')
+plt.grid(alpha=0.4)
+plt.title('method of exhaustion')
 plt.show()

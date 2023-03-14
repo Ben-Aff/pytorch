@@ -1,7 +1,0 @@
-'''Suppose that students would get y points in the final exam,if they spent x hours in paper Pytorch Tutorial
-x(hours)        y(points)
-  1                 2
-  2                 4
-  3                 6
-  4                 ?
-The question is what would be the grade if I study 4 hours'''

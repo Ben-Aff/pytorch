@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 class AlexNet(nn.Module):
-    def __init__(self,numberclass,init_weights):
+    def __init__(self,numclass,init_weights):
         super(AlexNet,self).__init__()
         self.features = nn.Sequential(
             nn.Conv2d(3, 48, kernel_size=11, stride=4, padding=2),  # input[3, 224, 224]  output[48, 55, 55]
@@ -28,7 +28,7 @@ class AlexNet(nn.Module):
             nn.Dropout(p=0.5),
             nn.Linear(2048,2048),
             nn.ReLU(inplace=True),
-            nn.Linear(2048,numberclass),
+            nn.Linear(2048,numclass),
         )
 
         if init_weights:

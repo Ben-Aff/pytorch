@@ -5,38 +5,36 @@ import json
 import torch
 import torch.nn as nn
 from torchvision import transforms, datasets, utils
-import matplotlib.pyplot as plt
-import numpy as np
 import torch.optim as optim
 from tqdm import tqdm
-
 from model import AlexNet
 
 def main():
+
     '''设置设备'''
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("using {} device.".format(device))
-    '''数据集预处理'''
-    data_transform = {
-        "train": transforms.Compose([transforms.RandomResizedCrop(224),
-                                     transforms.RandomHorizontalFlip(),
-                                     transforms.ToTensor(),
-                                     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]),
-        "val": transforms.Compose([transforms.Resize((224, 224)),  # cannot 224, must (224, 224)
-                                   transforms.ToTensor(),
-                                   transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])}
-    '''加载数据集'''
-    image_path = os.path("../flower/")  # flower data set path
-    assert os.path.exists(image_path), "{} path does not exist.".format(image_path)
 
-    train_dataset = datasets.ImageFolder(root=os.path.join(image_path, "train"),
+    '''数据集预处理'''
+    data_transform = {  "train": transforms.Compose([transforms.RandomResizedCrop(224),
+                                 transforms.RandomHorizontalFlip(),
+                                 transforms.ToTensor(),
+                                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]),
+                        "val":   transforms.Compose([transforms.Resize((224, 224)),  #cannot 224, must (224, 224)
+                                 transforms.ToTensor(),
+                                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])}
+
+    '''设置训练集'''
+    train_dataset = datasets.ImageFolder(root="../dataset/flowers/train",
                                          transform=data_transform["train"])
+
+    '''查看训练集大小---验证训练集是否加载成功'''
     train_num = len(train_dataset)
 
-    # {'daisy':0, 'dandelion':1, 'roses':2, 'sunflower':3, 'tulips':4}
+    # 设置类别{'daisy':0, 'dandelion':1, 'roses':2, 'sunflower':3, 'tulips':4}
     flower_list = train_dataset.class_to_idx
     cla_dict = dict((val, key) for key, val in flower_list.items())
-    # write dict into json file
+    # write dict into json文件
     json_str = json.dumps(cla_dict, indent=4)
     with open('class_indices.json', 'w') as json_file:
         json_file.write(json_str)
@@ -45,12 +43,13 @@ def main():
     nw = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])  # number of workers
     print('Using {} dataloader workers every process'.format(nw))
 
+    '''加载训练集'''
     train_loader = torch.utils.data.DataLoader(train_dataset,
                                                batch_size=batch_size,
                                                shuffle=True,
                                                num_workers=0)
 
-    validate_dataset = datasets.ImageFolder(root=os.path.join(image_path, "val"),
+    validate_dataset = datasets.ImageFolder(root="../dataset/flowers/train",
                                             transform=data_transform["val"])
     val_num = len(validate_dataset)
     validate_loader = torch.utils.data.DataLoader(validate_dataset,
@@ -60,23 +59,20 @@ def main():
     print("using {} images for training, {} images for validation.".format(train_num,
                                                                            val_num))
 
-
-
-
-    net = AlexNet(num_classes=5, init_weights=True)
+    net = AlexNet(numclass=5, init_weights=True)
     net.to(device)
-    #定义损失函数
+    '''定义损失函数'''
     loss_function = nn.CrossEntropyLoss()
-    #构造优化器
+    '''构造优化器'''
     optimizer = optim.Adam(net.parameters(), lr=0.0002)
     epochs = 10
-    save_path = './AlexNet.pth'
+    save_path = './logs/AlexNet.pth'
     best_acc = 0.0
     train_steps = len(train_loader)
-
+    #训练
     for epoch in range(epochs):
-        # train
-        net.train()#开启丢弃法
+        #训练
+        net.train()#训练时开启丢弃法
         running_loss = 0.0
         train_bar = tqdm(train_loader, file=sys.stdout)
         for step, data in enumerate(train_bar):
@@ -87,15 +83,14 @@ def main():
             loss.backward()
             optimizer.step()
 
-            # print statistics
+            #打印结果
             running_loss += loss.item()
 
             train_bar.desc = "train epoch[{}/{}] loss:{:.3f}".format(epoch + 1,
                                                                      epochs,
                                                                      loss)
-
-        # validate
-        net.eval()#关闭丢弃法
+        #验证
+        net.eval()#验证时关闭丢弃法
         acc = 0.0  # accumulate accurate number / epoch
         with torch.no_grad():
             val_bar = tqdm(validate_loader, file=sys.stdout)
@@ -114,6 +109,7 @@ def main():
             torch.save(net.state_dict(), save_path)
 
     print('Finished Training')
+
 
 
 if __name__ == '__main__':

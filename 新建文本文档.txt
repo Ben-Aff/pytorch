@@ -197,9 +197,18 @@ b是由areshape得到的，这样a和b都会改变
 nn.Linear(输入层，输出层)
 #展平层
 nn.Flatten()：将高维数组展平为一个一维行向量
-
-
-
+#卷积层
+nn.Conv2d(c01，c02，kernel_size=()，padding=()，stride=)
+-c01:输入通道数
+-c02:输出通道数
+-kernel_size:卷积核尺寸(hw)
+-padding:填充尺寸(hw)
+-stride:步长
+#最大池化层
+nn.MaxPool2d(n，padding=,stride)
+-n:n是尺寸为n*n的窗口
+-padding:填充
+-stride:步长
 
 
 

@@ -43,6 +43,9 @@ def main():
     nw = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])  # number of workers
     print('Using {} dataloader workers every process'.format(nw))
 
+
+
+
     '''加载训练集'''
     train_loader = torch.utils.data.DataLoader(train_dataset,
                                                batch_size=batch_size,
@@ -52,9 +55,11 @@ def main():
     validate_dataset = datasets.ImageFolder(root="../dataset/flowers/train",
                                             transform=data_transform["val"])
     val_num = len(validate_dataset)
+    '''加载验证集'''
     validate_loader = torch.utils.data.DataLoader(validate_dataset,
-                                                  batch_size=4, shuffle=False,
-                                                  num_workers=nw)
+                                                  batch_size=4,
+                                                  shuffle=False,
+                                                  num_workers=0)
 
     print("using {} images for training, {} images for validation.".format(train_num,
                                                                            val_num))

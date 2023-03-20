@@ -174,6 +174,59 @@ torch.load('要加载的文件名')
 
 
 
+#图像加载
+图像预处理函数
+1.1 torchvision.datasets.ImageFolder()函数
+ImageFolder函数假设所有的文件按文件夹保存，每个文件夹下存储同一类别的图片，文件夹名为类别名；
+ImageFolder(root=, 
+	     transform=)
+
+参数解释：
+-root：图片存储根目录；
+-transform：对PIL Image进行的转换操作，原始图片作为输入，返回一个转换后的图片；
+返回值：
+self.classes：用一个 list 保存类别名称；
+self.class_to_idx：类别对应的索引，与不做任何转换返回的 target 对应；
+self.imgs：保存(img-path, class) tuple的 list；
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #view操作可以改变矩阵的维度
 x=torch.rand(4,4)
 y=x.view(16)

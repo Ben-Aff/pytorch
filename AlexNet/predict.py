@@ -4,7 +4,6 @@ import torch
 from PIL import Image
 from torchvision import transforms
 import matplotlib.pyplot as plt
-
 from model import AlexNet
 
 
@@ -37,7 +36,7 @@ def main():
     # create model
     model = AlexNet(numclass=5,init_weights=False).to(device)
 
-    # load model weights
+    #加载模型权重
     weights_path = "./logs/AlexNet.pth"
     assert os.path.exists(weights_path), "file: '{}' dose not exist.".format(weights_path)
     model.load_state_dict(torch.load(weights_path))

@@ -372,6 +372,22 @@ print(网络实例对象名)
 
 
 
+#图像增广
+torchvision.transforms.RandomHorizontalFlip()#对图片进行随机水平翻转
+torchvision.transforms.RandomVerticalFlip()#对图片进行随机上下翻转
+torchvision.transforms.RandomResizedCrop((x,y),scale=(a,b),ratio=(h,w))#对图片进行随机裁剪,裁剪后的尺寸为(x，y)，裁剪后图像保持尺寸为a到b之间，高宽比为h或w
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

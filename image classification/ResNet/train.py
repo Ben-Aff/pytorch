@@ -62,7 +62,7 @@ def main():
     model_weight_path = "./resnet34-pre.pth"
     assert os.path.exists(model_weight_path), "file {} does not exist.".format(model_weight_path)
     '''将预训练模型权重加载到模型上'''
-    net.load_state_dict(torch.load(model_weight_path, map_location='cpu'))
+    net.load_state_dict(torch.load(model_weight_path, map_location={'0': 'CPU'}), strict=False)
     '''改变全连接层的结构'''
     in_channel = net.fc.in_features#获取模型全连接层输入特征矩阵的深度
     net.fc = nn.Linear(in_channel, 5)#将原模型全连接层替换(要训练的类别数目不同)'''
